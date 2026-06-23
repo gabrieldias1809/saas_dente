@@ -228,18 +228,56 @@ function startTimer() {
 // Base URL da API (Usa a variável do Vercel em produção, ou localhost em dev)
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-async function checkout() { 
+// Intercept click on offer button to show the form instead of directly going to PIX
+document.querySelector('.offer .btn').onclick = (e) => {
+  e.preventDefault();
+  show('s-checkout-form');
+};
+
+// Auto-formatting CPF and Phone
+const cpfInput = document.getElementById('clientCpf');
+cpfInput.addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,"");
+  v = v.replace(/(\d{3})(\d)/,"$1.$2");
+  v = v.replace(/(\d{3})(\d)/,"$1.$2");
+  v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+  e.target.value = v;
+});
+
+const phoneInput = document.getElementById('clientPhone');
+phoneInput.addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,"");
+  v = v.replace(/^(\d{2})(\d)/g,"($1) $2");
+  v = v.replace(/(\d)(\d{4})$/,"$1-$2");
+  e.target.value = v;
+});
+
+// Handle form submission
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const clientData = {
+    name: document.getElementById('clientName').value,
+    cpf: document.getElementById('clientCpf').value,
+    email: document.getElementById('clientEmail').value,
+    phone: document.getElementById('clientPhone').value
+  };
+
+  checkout(clientData);
+});
+
+async function checkout(clientData) { 
   // Disable button to prevent double click
-  const btn = document.querySelector('.offer .btn');
+  const btn = document.querySelector('#checkoutForm .btn');
   const originalText = btn.textContent;
-  btn.textContent = "Gerando PIX...";
+  btn.innerHTML = '<span class="btn-text">Gerando PIX...</span>';
   btn.disabled = true;
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/checkout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({}) // Envia body vazio para usar os valores hardcoded do backend
+      body: JSON.stringify({ client: clientData })
     });
     
     if (!res.ok) throw new Error("Falha na API");

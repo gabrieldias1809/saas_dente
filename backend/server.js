@@ -84,15 +84,18 @@ app.post('/api/checkout', async (req, res) => {
         
         const accessToken = authResponse.data.access_token;
 
+        // Extrair dados do cliente enviados pelo frontend (com fallbacks)
+        const clientData = req.body.client || {};
+        
         // 2. Montar o Payload de Cash-In conforme a documentação
         const cashInPayload = {
           amount: 47.90, // Valor do seu laudo (ajuste conforme necessário)
           description: "Laudo Completo DenteSafe",
           client: {
-            name: "Cliente DenteSafe",
-            cpf: "12345678909", // CPF Genérico para checkout expresso (se o seu checkout pedir CPF real, substitua aqui)
-            email: "contato@dentesafe.com.br",
-            phone: "11999999999"
+            name: clientData.name || "Cliente DenteSafe",
+            cpf: clientData.cpf ? clientData.cpf.replace(/\D/g, '') : "12345678909", 
+            email: clientData.email || "contato@dentesafe.com.br",
+            phone: clientData.phone ? clientData.phone.replace(/\D/g, '') : "11999999999"
           }
         };
 

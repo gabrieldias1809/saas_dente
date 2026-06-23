@@ -128,6 +128,38 @@
     <p class="disclaimer">Este laudo é uma triagem educativa baseada em autorrelato e <b>não constitui diagnóstico médico ou odontológico</b>. Os resultados não substituem a avaliação presencial de um cirurgião-dentista. Em caso de dor, sangramento ou lesão, procure um profissional.</p>
   </section>
 
+    <!-- CHECKOUT FORM -->
+    <section class="screen" id="s-checkout-form">
+      <h2>Quase lá!</h2>
+      <p>Preencha seus dados para liberar seu laudo completo e seguro.</p>
+      
+      <form id="checkoutForm" class="checkout-form">
+        <div class="input-group">
+          <label for="clientName">Nome Completo</label>
+          <input type="text" id="clientName" placeholder="Ex: João da Silva" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="clientCpf">CPF</label>
+          <input type="text" id="clientCpf" placeholder="000.000.000-00" required maxlength="14">
+        </div>
+        
+        <div class="input-group">
+          <label for="clientEmail">E-mail</label>
+          <input type="email" id="clientEmail" placeholder="joao@email.com" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="clientPhone">Celular (com DDD)</label>
+          <input type="tel" id="clientPhone" placeholder="(11) 99999-9999" required maxlength="15">
+        </div>
+
+        <button type="submit" class="btn btn-full">
+          <span class="btn-text">Continuar para o Pagamento</span>
+        </button>
+      </form>
+    </section>
+
   <!-- 6. PIX CHECKOUT -->
   <section class="screen" id="s-pix">
     <div class="eyebrow"><span class="dot"></span> Pagamento Pendente</div>

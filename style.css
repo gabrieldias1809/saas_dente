@@ -219,6 +219,48 @@ h1 .hl{
 }
 .trust .avs img:first-child{margin-left:0}
 
+/* FORMULÁRIO DE CHECKOUT */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: #a0a0aa;
+  font-weight: 500;
+}
+
+.input-group input {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 0 2px rgba(0,255,136,0.2);
+}
+
+.input-group input::placeholder {
+  color: #555;
+}
+
 /* hero visual chip */
 .alertcard{
   background: linear-gradient(145deg, rgba(225, 20, 20, 0.08), rgba(20, 20, 22, 0.6));
