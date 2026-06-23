@@ -50,7 +50,7 @@ try {
 app.post('/api/checkout', async (req, res) => {
   try {
     // Generate a unique identifier for our order
-    const identifier = uuidv4();
+    let identifier = uuidv4();
     
     // Check if we have SyncPay credentials configured
     const clientId = process.env.SYNCPAY_CLIENT_ID;
@@ -61,7 +61,7 @@ app.post('/api/checkout', async (req, res) => {
     // Se a API for real e as chaves existirem
     if (clientId && clientSecret) {
       const pixPayload = {
-        amount: 15.90, // Valor fixado conforme a regra de negócio
+        amount: 19.90, // Valor fixado conforme a regra de negócio
         description: "Laudo Completo e Protocolo DenteSafe",
         webhook_url: process.env.SYNCPAY_WEBHOOK_URL, // Ex: https://seu-app.easypanel.host/api/webhook/syncpay
         client: {
@@ -89,7 +89,7 @@ app.post('/api/checkout', async (req, res) => {
         
         // 2. Montar o Payload de Cash-In conforme a documentação
         const cashInPayload = {
-          amount: 47.90, // Valor do seu laudo (ajuste conforme necessário)
+          amount: 19.90, // Valor do seu laudo (ajuste conforme necessário)
           description: "Laudo Completo DenteSafe",
           client: {
             name: clientData.name || "Cliente DenteSafe",
