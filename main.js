@@ -279,7 +279,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 // Intercept click on offer button to show the form instead of directly going to PIX
 document.querySelector('.offer .btn').onclick = (e) => {
   e.preventDefault();
-  show('s-checkout-form');
+  // show('s-checkout-form'); // Restaurar para voltar com o formulário
+  window.location.href = '/laudo.html'; // BYPASS TEMPORÁRIO DIRETO PRO LAUDO
 };
 
 // Auto-formatting CPF and Phone
