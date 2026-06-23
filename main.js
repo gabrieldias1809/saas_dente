@@ -281,7 +281,7 @@ function startTimer() {
 }
 
 // Base URL da API (Usa a variável do Vercel em produção, ou localhost em dev)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000' : 'https://api-dente.onrender.com');
 
 // Intercept click on offer button to show the form instead of directly going to PIX
 document.querySelector('.offer .btn').onclick = (e) => {
