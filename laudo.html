@@ -70,6 +70,26 @@ p.body b{color:#fff}
 .footer{text-align:center;color:#4a4a50;font-size:12px;margin-top:22px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--panel2);border:1px solid var(--line);color:var(--text);font-size:13px;font-weight:600;padding:13px 18px;border-radius:12px;max-width:90%;text-align:center;transition:transform .3s ease;z-index:50}
 .toast.show{transform:translateX(-50%) translateY(0)}
+.pix-modal {
+  display: none;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 10, 11, 0.85); backdrop-filter: blur(4px);
+  z-index: 100; justify-content: center; align-items: center;
+}
+.pix-modal.show { display: flex; }
+.pix-modal-content {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  padding: 24px; width: 90%; max-width: 400px; position: relative;
+}
+.close-modal {
+  position: absolute; top: 12px; right: 16px; background: transparent; border: none;
+  color: var(--muted); font-size: 24px; cursor: pointer;
+}
+.inp {
+  width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text);
+  padding: 14px; border-radius: 12px; margin-bottom: 12px; font-family: 'Inter'; font-size:15px;
+}
+.inp:focus { outline: none; border-color: var(--amber); }
 </style>
 </head>
 <body>
@@ -179,6 +199,27 @@ p.body b{color:#fff}
 
 <div class="toast" id="toast"></div>
 
+<div class="pix-modal" id="pixModal">
+  <div class="pix-modal-content">
+    <button class="close-modal" id="closeModal">&times;</button>
+    <div id="checkoutStep1">
+      <h3 style="font-family:'Anton'; font-weight:400; text-transform:uppercase; font-size:22px; margin-bottom:15px; color:var(--amber);">Libere seu guia agora</h3>
+      <input type="text" id="upsellName" placeholder="Seu nome completo" class="inp" />
+      <input type="email" id="upsellEmail" placeholder="Seu e-mail principal" class="inp" />
+      <input type="text" id="upsellCpf" placeholder="Seu CPF" class="inp" />
+      <button class="dl" id="btnGeneratePixUpsell" style="margin-top:10px;">Gerar PIX de R$ 27,00</button>
+    </div>
+    <div id="checkoutStep2" style="display:none; text-align:center;">
+      <h3 style="font-family:'Anton'; font-weight:400; text-transform:uppercase; font-size:22px; margin-bottom:10px; color:var(--green);">PIX Gerado!</h3>
+      <p style="margin-bottom:15px; font-size:14px; color:var(--muted);">Escaneie o QR Code ou copie a chave abaixo para pagar R$ 27,00.</p>
+      <img id="qrCodeImgUpsell" src="" alt="QR Code PIX" style="width:180px;height:180px;border-radius:12px;margin-bottom:15px;background:#fff;padding:10px;">
+      <textarea id="pixCodeTxtUpsell" class="inp" readonly style="resize:none;height:70px;font-size:12px;word-break:break-all;"></textarea>
+      <button class="dl" id="btnCopyPixUpsell" style="margin-top:5px; padding:12px;">Copiar Chave PIX</button>
+      <p style="margin-top:15px;font-size:13px;color:var(--amber);font-weight:600;">Aguardando pagamento... O guia será baixado automaticamente.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===== CONFIG — troque o link do upsell aqui ===== */
 const CONFIG = {
@@ -252,12 +293,111 @@ document.getElementById('btnDownload').addEventListener('click',function(){
 });
 
 document.getElementById('btnUpsell').addEventListener('click',function(){
-  if(CONFIG.upsellCheckoutUrl.indexOf('SEU-UPSELL-AQUI')>-1){
-    toast('Configure o link do checkout do upsell no CONFIG.');
+  document.getElementById('pixModal').classList.add('show');
+});
+
+document.getElementById('closeModal').addEventListener('click',function(){
+  document.getElementById('pixModal').classList.remove('show');
+});
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+let upsellPollInterval;
+
+document.getElementById('btnGeneratePixUpsell').addEventListener('click', async function(){
+  const btn = this;
+  const name = document.getElementById('upsellName').value.trim();
+  const email = document.getElementById('upsellEmail').value.trim();
+  const cpf = document.getElementById('upsellCpf').value.trim();
+  
+  if(!name || !email || !cpf){
+    toast('Preencha todos os campos para gerar o PIX.');
     return;
   }
-  window.open(CONFIG.upsellCheckoutUrl,'_blank');
+  
+  btn.textContent = 'Gerando PIX...';
+  btn.disabled = true;
+  
+  try {
+    const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:3000' 
+      : 'https://api-dente.onrender.com'; // replace with actual backend URL if deployed separately
+      
+    const response = await fetch(`${backendUrl}/api/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: 27.00,
+        description: "Guia: Como Escolher e Cobrar o Dentista Certo",
+        client: { name, email, cpf }
+      })
+    });
+    
+    const data = await response.json();
+    if(data.pix_code){
+      // Show step 2
+      document.getElementById('checkoutStep1').style.display = 'none';
+      document.getElementById('checkoutStep2').style.display = 'block';
+      
+      document.getElementById('pixCodeTxtUpsell').value = data.pix_code;
+      // Generate simple QR Code using google charts or qrserver
+      document.getElementById('qrCodeImgUpsell').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.pix_code)}`;
+      
+      // Start polling
+      upsellPollInterval = setInterval(() => checkUpsellStatus(data.identifier), 5000);
+    } else {
+      toast('Erro ao gerar PIX. Tente novamente.');
+      btn.textContent = 'Gerar PIX de R$ 27,00';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    console.error(e);
+    toast('Erro de conexão. Servidor indisponível.');
+    btn.textContent = 'Gerar PIX de R$ 27,00';
+    btn.disabled = false;
+  }
 });
+
+document.getElementById('btnCopyPixUpsell').addEventListener('click', function(){
+  const txt = document.getElementById('pixCodeTxtUpsell');
+  txt.select();
+  document.execCommand('copy');
+  this.textContent = 'Copiado!';
+  setTimeout(() => this.textContent = 'Copiar Chave PIX', 2000);
+});
+
+async function checkUpsellStatus(identifier){
+  try {
+    const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:3000' 
+      : 'https://api-dente.onrender.com';
+    const res = await fetch(`${backendUrl}/api/status/${identifier}`);
+    const data = await res.json();
+    if(data.paid){
+      clearInterval(upsellPollInterval);
+      toast('Pagamento aprovado! O Guia será baixado agora.');
+      document.getElementById('pixModal').classList.remove('show');
+      
+      // We will trigger a fake download of the guide (using the main PDF for now since we don't have the guide pdf binary)
+      // In production, replace PDF_B64 with the actual guide base64 or a link.
+      setTimeout(() => {
+        try{
+          const blob=b64ToBlob(PDF_B64,'application/pdf');
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement('a');
+          a.href=url; a.download="Guia_Cobrar_Dentista.pdf";
+          document.body.appendChild(a); a.click();
+          setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1500);
+        } catch(e){}
+      }, 1000);
+    }
+  } catch(e){}
+}
 
 /* índice via redirecionamento do Kiwify (?score=72) */
 const p=new URLSearchParams(location.search);
