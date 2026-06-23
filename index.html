@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DenteSafe — Diagnóstico de Risco Bucal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="hazard"></div>
+
+  <!-- 1. INTRO -->
+  <section class="screen active" id="s-intro">
+    <div class="eyebrow fade-in"><span class="dot"></span> Diagnóstico gratuito · 2 minutos</div>
+    <h1 class="slide-up">Seu dente pode estar <span class="hl">apodrecendo por dentro</span> — e você não sente nada</h1>
+    <p class="lead slide-up delay-1">A cárie avança em silêncio. Quando dói, muitas vezes já virou <b>canal, extração ou prótese</b>. Responda 8 perguntas e descubra agora o seu <b>nível de risco bucal</b>.</p>
+
+    <div class="alertcard glass-panel slide-up delay-2 hover-lift">
+      <div class="ic pulse">⚠️</div>
+      <p><b>90% das pessoas</b> ignoram os primeiros sinais. Este teste cruza seus sintomas e gera um laudo de risco em segundos.</p>
+    </div>
+
+    <div class="trust slide-up delay-3">
+      <div class="avs">
+        <img src="/avatar-1.png" alt="Usuário 1">
+        <img src="/avatar-2.png" alt="Usuário 2">
+        <img src="/avatar-3.png" alt="Usuário 3">
+        <img src="/avatar-4.png" alt="Usuário 4">
+      </div>
+      <span>+ de 47 mil diagnósticos já feitos</span>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-glow slide-up delay-4" onclick="startQuiz()">Iniciar meu diagnóstico →</button>
+    <p class="fine slide-up delay-5">Triagem educativa. Não substitui avaliação com dentista.</p>
+  </section>
+
+  <!-- 2. QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="qtop">
+      <div class="qcount">Pergunta <b id="qnum">1</b> de 8</div>
+      <div class="qcount" id="qpct">12%</div>
+    </div>
+    <div class="bar"><i id="qbar"></i></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="opts" id="qopts"></div>
+  </section>
+
+  <!-- 3. ANALYZING -->
+  <section class="screen analyze" id="s-analyze">
+    <div class="ring-container">
+      <div class="ring"></div>
+      <div class="ring-inner"></div>
+    </div>
+    <div class="apct" id="apct">0%</div>
+    <div class="astep" id="astep">Cruzando seus sintomas…</div>
+  </section>
+
+  <!-- 4. RESULT (partial) -->
+  <section class="screen" id="s-result">
+    <div class="eyebrow"><span class="dot"></span> Laudo parcial · resultado preliminar</div>
+    <h1 style="font-size:clamp(28px,7.5vw,38px)">Seu laudo de risco bucal está pronto</h1>
+
+    <div class="gauge glass-panel">
+      <div class="glabel">Índice de risco</div>
+      <div class="gscore">
+        <span class="n" id="rscore">0</span><span class="d">/100</span>
+        <span class="tag" id="rtag">—</span>
+      </div>
+      <div class="meter"><div class="pin" id="rpin" style="left:0%"></div></div>
+      <div class="mscale"><span>Baixo</span><span>Moderado</span><span>Alto</span></div>
+    </div>
+
+    <div class="sectlabel">Sinais detectados nas suas respostas</div>
+    <div class="flags" id="rflags"></div>
+
+    <div class="sectlabel">Bloqueado no seu laudo completo</div>
+    <div class="flags">
+      <div class="flag locked hover-lift">
+        <span class="fi">🔒</span>
+        <p>Comprometimento provável do dente 36 com indicação de avaliação urgente em até X dias</p>
+        <div class="lockchip pulse-amber">🔒 Desbloquear laudo</div>
+      </div>
+      <div class="flag locked hover-lift">
+        <span class="fi">🔒</span>
+        <p>Protocolo de prevenção diário personalizado para frear o avanço</p>
+        <div class="lockchip pulse-amber">🔒 Desbloquear laudo</div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn gold btn-glow-gold" onclick="goPay()">Ver meu laudo completo →</button>
+    <p class="fine">Seu resultado preliminar foi salvo. O laudo completo inclui o protocolo de prevenção.</p>
+  </section>
+
+  <!-- 5. PAYWALL -->
+  <section class="screen" id="s-pay">
+    <div class="eyebrow"><span class="dot"></span> Seu laudo completo</div>
+    <h1 style="font-size:clamp(28px,7.5vw,38px)">Desbloqueie o laudo + <span class="hl">protocolo de prevenção</span></h1>
+    <p class="lead">Seu índice ficou em <b id="payscore" class="highlight">—</b>. Veja exatamente o que está acontecendo e o que fazer <b>antes que vire procedimento caro</b>.</p>
+
+    <div class="offer glass-panel glow-bg-wrapper">
+      <div class="glow-bg"></div>
+      <div class="offer-content">
+        <div class="includes">
+          <div class="inc hover-lift"><span class="ck">✓</span><div><b>Laudo bucal completo</b> personalizado com base nas suas respostas</div></div>
+          <div class="inc hover-lift"><span class="ck">✓</span><div>Os <b>3 sinais</b> que significam "procure um dentista AGORA"</div></div>
+          <div class="inc hover-lift"><span class="ck">✓</span><div><b>Protocolo de prevenção diário</b> — rotina caseira passo a passo</div></div>
+          <div class="inc hover-lift"><span class="ck">✓</span><div>Como <b>frear o avanço</b> da cárie antes de chegar no canal</div></div>
+          <div class="inc hover-lift"><span class="ck">✓</span><div><b>Checklist de emergência bucal</b> pra ter sempre à mão</div></div>
+        </div>
+
+        <div class="priceblock">
+          <div class="timer pulse-red">⏳ Oferta da sua análise expira em <span id="clock">10:00</span></div>
+          <div class="pold">De R$ <span id="pold">47,00</span></div>
+          <div class="pnew">R$ <span id="pnew">19,90</span></div>
+          <div class="pmeta">Pagamento único · acesso imediato</div>
+          <button class="btn gold btn-glow-gold" onclick="checkout()">Quero meu laudo completo agora</button>
+          <div class="guarantee"><span class="g">🛡️</span> Garantia incondicional de 7 dias</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="disclaimer">Este laudo é uma triagem educativa baseada em autorrelato e <b>não constitui diagnóstico médico ou odontológico</b>. Os resultados não substituem a avaliação presencial de um cirurgião-dentista. Em caso de dor, sangramento ou lesão, procure um profissional.</p>
+  </section>
+
+  <!-- 6. PIX CHECKOUT -->
+  <section class="screen" id="s-pix">
+    <div class="eyebrow"><span class="dot"></span> Pagamento Pendente</div>
+    <h1 style="font-size:clamp(24px,6.5vw,32px)">Conclua seu pagamento PIX</h1>
+    <p class="lead">Leia o QR Code abaixo com o app do seu banco ou copie e cole o código para liberar seu laudo na hora.</p>
+
+    <div class="pix-card glass-panel hover-lift">
+      <div class="qr-container">
+        <img id="qrCode" src="" alt="QR Code PIX">
+        <div id="qrLoading" class="ring-container" style="display: none; width: 60px; height: 60px; margin: 40px auto;">
+          <div class="ring" style="border-width: 4px;"></div>
+        </div>
+      </div>
+      
+      <div class="pix-copy-section">
+        <label>Código Copia e Cola:</label>
+        <div class="pix-input-group">
+          <input type="text" id="pixCodeInput" readonly>
+          <button id="btnCopyPix" class="btn-copy">Copiar</button>
+        </div>
+      </div>
+      
+      <div class="waiting-msg">
+        <span class="pulse-red dot" style="display:inline-block; margin-right:6px; width:8px; height:8px; border-radius:50%; background:var(--amber);"></span>
+        Aguardando confirmação de pagamento...
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Copiado com sucesso!</div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

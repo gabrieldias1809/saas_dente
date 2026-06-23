@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DenteSafe — Diagnóstico de Risco Bucal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A0B;
+  --panel:#141416;
+  --panel2:#1C1C1F;
+  --line:#2A2A2E;
+  --red:#E11414;
+  --red-bright:#FF2A2A;
+  --amber:#FFB400;
+  --yellow:#FFD60A;
+  --green:#22C55E;
+  --text:#F5F5F4;
+  --muted:#8A8A90;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* hazard stripe — signature element */
+.hazard{height:8px;width:100%;background:repeating-linear-gradient(45deg,var(--yellow) 0 14px,#0A0A0B 14px 28px);flex-shrink:0}
+
+.screen{display:none;flex:1;flex-direction:column;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--red-bright);box-shadow:0 0 0 0 rgba(255,42,42,.6);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,42,42,.6)}70%{box-shadow:0 0 0 9px rgba(255,42,42,0)}100%{box-shadow:0 0 0 0 rgba(255,42,42,0)}}
+
+h1{font-family:'Anton',sans-serif;font-weight:400;line-height:.98;letter-spacing:.01em;text-transform:uppercase;font-size:clamp(34px,9vw,46px)}
+h1 .hl{color:var(--red-bright)}
+.lead{color:var(--muted);font-size:16px;line-height:1.5;margin-top:18px;font-weight:400}
+.lead b{color:var(--text);font-weight:600}
+
+.btn{appearance:none;border:none;cursor:pointer;font-family:'Inter';font-weight:800;font-size:17px;letter-spacing:.01em;color:#fff;background:var(--red);border-radius:14px;padding:18px 20px;width:100%;text-align:center;text-transform:uppercase;transition:transform .08s ease, background .15s ease;box-shadow:0 8px 24px -8px rgba(225,20,20,.7)}
+.btn:hover{background:var(--red-bright)}
+.btn:active{transform:scale(.98)}
+.btn.gold{background:var(--yellow);color:#0A0A0B;box-shadow:0 8px 24px -8px rgba(255,214,10,.6)}
+.btn.gold:hover{background:var(--amber)}
+.btn:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+.spacer{flex:1}
+.fine{font-size:12px;color:var(--muted);line-height:1.5;margin-top:16px}
+.trust{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:13px;color:var(--muted)}
+.trust .avs{display:flex}
+.trust .avs span{width:24px;height:24px;border-radius:50%;border:2px solid var(--bg);background:linear-gradient(135deg,#3a3a3f,#222);margin-left:-8px}
+.trust .avs span:first-child{margin-left:0}
+
+/* hero visual chip */
+.alertcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:12px;padding:16px;margin-top:24px;display:flex;gap:12px;align-items:flex-start}
+.alertcard .ic{font-size:22px;line-height:1}
+.alertcard p{font-size:14px;color:var(--muted);line-height:1.45}
+.alertcard b{color:var(--text)}
+
+/* QUIZ */
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.qcount{font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.qcount b{color:var(--amber)}
+.bar{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-bottom:30px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--red));border-radius:99px;transition:width .35s ease}
+.qtext{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(26px,7vw,34px);line-height:1.04;margin-bottom:26px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{background:var(--panel);border:1.5px solid var(--line);border-radius:13px;padding:18px 18px;font-size:16px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;transition:all .12s ease;display:flex;align-items:center;gap:13px}
+.opt:hover{border-color:var(--amber);background:var(--panel2)}
+.opt:active{transform:scale(.99)}
+.opt .mk{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;transition:all .12s}
+.opt:hover .mk{border-color:var(--amber)}
+.opt:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+/* ANALYZING */
+.analyze{align-items:center;justify-content:center;text-align:center;gap:0}
+.ring{width:96px;height:96px;border-radius:50%;border:5px solid var(--panel2);border-top-color:var(--red-bright);animation:spin .9s linear infinite;margin-bottom:30px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.astep{font-size:16px;font-weight:600;color:var(--muted);min-height:24px;transition:opacity .2s}
+.apct{font-family:'Anton';font-size:54px;color:var(--text);margin-bottom:6px}
+
+/* RESULT */
+.gauge{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:18px 0 22px}
+.glabel{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.gscore{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.gscore .n{font-family:'Anton';font-size:58px;line-height:.9}
+.gscore .d{font-size:18px;color:var(--muted);font-weight:700}
+.gscore .tag{margin-left:auto;font-family:'Anton';font-size:20px;padding:6px 12px;border-radius:8px}
+.meter{height:14px;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));border-radius:99px;position:relative}
+.meter .pin{position:absolute;top:-5px;width:4px;height:24px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 8px rgba(0,0,0,.6)}
+.mscale{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px;font-weight:600}
+
+.flags{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.flag{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:10px;padding:13px 14px}
+.flag .fi{color:var(--red-bright);font-size:16px;line-height:1.3;flex-shrink:0}
+.flag p{font-size:14px;line-height:1.4}
+.flag.locked{border-left-color:var(--amber);position:relative;overflow:hidden}
+.flag.locked p{filter:blur(5px);user-select:none;color:var(--muted)}
+.flag.locked .lockchip{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:7px;background:rgba(20,20,22,.55);font-size:13px;font-weight:700;color:var(--amber);letter-spacing:.04em}
+
+.sectlabel{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px}
+
+/* PAYWALL */
+.offer{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:6px}
+.includes{display:flex;flex-direction:column;gap:13px;margin:6px 0 22px}
+.inc{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.4}
+.inc .ck{color:var(--green);font-weight:800;flex-shrink:0;font-size:16px}
+.inc b{font-weight:700}
+.priceblock{text-align:center;border-top:1px dashed var(--line);padding-top:20px}
+.pold{color:var(--muted);text-decoration:line-through;font-size:16px;font-weight:600}
+.pnew{font-family:'Anton';font-size:52px;line-height:1;margin:4px 0}
+.pnew small{font-size:22px;color:var(--muted);font-weight:400}
+.pmeta{font-size:13px;color:var(--amber);font-weight:700;margin-bottom:18px}
+.timer{display:inline-flex;align-items:center;gap:8px;background:rgba(225,20,20,.12);border:1px solid rgba(225,20,20,.4);color:var(--red-bright);font-weight:800;font-size:14px;padding:9px 14px;border-radius:99px;margin-bottom:18px;letter-spacing:.04em}
+.guarantee{display:flex;align-items:center;gap:10px;justify-content:center;font-size:13px;color:var(--muted);margin-top:16px}
+.guarantee .g{font-size:18px}
+.disclaimer{font-size:11px;line-height:1.5;color:#5e5e64;margin-top:22px;text-align:center;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hazard"></div>
+
+<!-- 1. INTRO -->
+<section class="screen active" id="s-intro">
+  <div class="eyebrow"><span class="dot"></span> Diagnóstico gratuito · 2 minutos</div>
+  <h1>Seu dente pode estar <span class="hl">apodrecendo por dentro</span> — e você não sente nada</h1>
+  <p class="lead">A cárie avança em silêncio. Quando dói, muitas vezes já virou <b>canal, extração ou prótese</b>. Responda 8 perguntas e descubra agora o seu <b>nível de risco bucal</b>.</p>
+
+  <div class="alertcard">
+    <div class="ic">⚠️</div>
+    <p><b>90% das pessoas</b> ignoram os primeiros sinais. Este teste cruza seus sintomas e gera um laudo de risco em segundos.</p>
+  </div>
+
+  <div class="trust">
+    <div class="avs"><span></span><span></span><span></span><span></span></div>
+    <span>+ de 47 mil diagnósticos já feitos</span>
+  </div>
+
+  <div class="spacer"></div>
+  <button class="btn" onclick="startQuiz()">Iniciar meu diagnóstico →</button>
+  <p class="fine">Triagem educativa. Não substitui avaliação com dentista.</p>
+</section>
+
+<!-- 2. QUIZ -->
+<section class="screen" id="s-quiz">
+  <div class="qtop">
+    <div class="qcount">Pergunta <b id="qnum">1</b> de 8</div>
+    <div class="qcount" id="qpct">12%</div>
+  </div>
+  <div class="bar"><i id="qbar"></i></div>
+  <div class="qtext" id="qtext"></div>
+  <div class="opts" id="qopts"></div>
+</section>
+
+<!-- 3. ANALYZING -->
+<section class="screen analyze" id="s-analyze">
+  <div class="ring"></div>
+  <div class="apct" id="apct">0%</div>
+  <div class="astep" id="astep">Cruzando seus sintomas…</div>
+</section>
+
+<!-- 4. RESULT (partial) -->
+<section class="screen" id="s-result">
+  <div class="eyebrow"><span class="dot"></span> Laudo parcial · resultado preliminar</div>
+  <h1 style="font-size:clamp(28px,7.5vw,38px)">Seu laudo de risco bucal está pronto</h1>
+
+  <div class="gauge">
+    <div class="glabel">Índice de risco</div>
+    <div class="gscore">
+      <span class="n" id="rscore">0</span><span class="d">/100</span>
+      <span class="tag" id="rtag">—</span>
+    </div>
+    <div class="meter"><div class="pin" id="rpin" style="left:0%"></div></div>
+    <div class="mscale"><span>Baixo</span><span>Moderado</span><span>Alto</span></div>
+  </div>
+
+  <div class="sectlabel">Sinais detectados nas suas respostas</div>
+  <div class="flags" id="rflags"></div>
+
+  <div class="sectlabel">Bloqueado no seu laudo completo</div>
+  <div class="flags">
+    <div class="flag locked"><span class="fi">🔒</span><p>Comprometimento provável do dente 36 com indicação de avaliação urgente em até X dias</p><div class="lockchip">🔒 Desbloquear laudo</div></div>
+    <div class="flag locked"><span class="fi">🔒</span><p>Protocolo de prevenção diário personalizado para frear o avanço</p><div class="lockchip">🔒 Desbloquear laudo</div></div>
+  </div>
+
+  <div class="spacer"></div>
+  <button class="btn gold" onclick="goPay()">Ver meu laudo completo →</button>
+  <p class="fine">Seu resultado preliminar foi salvo. O laudo completo inclui o protocolo de prevenção.</p>
+</section>
+
+<!-- 5. PAYWALL -->
+<section class="screen" id="s-pay">
+  <div class="eyebrow"><span class="dot"></span> Seu laudo completo</div>
+  <h1 style="font-size:clamp(28px,7.5vw,38px)">Desbloqueie o laudo + <span class="hl">protocolo de prevenção</span></h1>
+  <p class="lead">Seu índice ficou em <b id="payscore">—</b>. Veja exatamente o que está acontecendo e o que fazer <b>antes que vire procedimento caro</b>.</p>
+
+  <div class="offer">
+    <div class="includes">
+      <div class="inc"><span class="ck">✓</span><div><b>Laudo bucal completo</b> personalizado com base nas suas respostas</div></div>
+      <div class="inc"><span class="ck">✓</span><div>Os <b>3 sinais</b> que significam "procure um dentista AGORA"</div></div>
+      <div class="inc"><span class="ck">✓</span><div><b>Protocolo de prevenção diário</b> — rotina caseira passo a passo</div></div>
+      <div class="inc"><span class="ck">✓</span><div>Como <b>frear o avanço</b> da cárie antes de chegar no canal</div></div>
+      <div class="inc"><span class="ck">✓</span><div><b>Checklist de emergência bucal</b> pra ter sempre à mão</div></div>
+    </div>
+
+    <div class="priceblock">
+      <div class="timer">⏳ Oferta da sua análise expira em <span id="clock">10:00</span></div>
+      <div class="pold">De R$ <span id="pold">47,00</span></div>
+      <div class="pnew">R$ <span id="pnew">19,90</span></div>
+      <div class="pmeta">Pagamento único · acesso imediato</div>
+      <button class="btn gold" onclick="checkout()">Quero meu laudo completo agora</button>
+      <div class="guarantee"><span class="g">🛡️</span> Garantia incondicional de 7 dias</div>
+    </div>
+  </div>
+
+  <p class="disclaimer">Este laudo é uma triagem educativa baseada em autorrelato e <b>não constitui diagnóstico médico ou odontológico</b>. Os resultados não substituem a avaliação presencial de um cirurgião-dentista. Em caso de dor, sangramento ou lesão, procure um profissional.</p>
+</section>
+
+</div>
+
+<script>
+/* ===== CONFIG — troque aqui ===== */
+const CONFIG = {
+  checkoutUrl: "https://pay.kiwify.com.br/SEU-LINK-AQUI",
+  precoNovo: "19,90",
+  precoDe: "47,00",
+  timerMin: 10
+};
+
+/* ===== QUIZ ===== */
+const QUESTIONS = [
+  { q:"Sua gengiva sangra quando você escova ou usa fio dental?",
+    a:[["Sim, com frequência",3],["Às vezes",2],["Nunca",0]],
+    flag:"Sangramento gengival — possível gengivite em curso" },
+  { q:"Você sente mau hálito que volta mesmo depois de escovar?",
+    a:[["Sim, sempre",3],["De vez em quando",2],["Não",0]],
+    flag:"Halitose persistente — sinal de proliferação bacteriana" },
+  { q:"Sente sensibilidade ou dor ao comer doce, gelado ou quente?",
+    a:[["Sim, forte",3],["Leve",1],["Não",0]],
+    flag:"Sensibilidade térmica — possível exposição de dentina / cárie ativa" },
+  { q:"Tem algum dente escurecido, manchado ou com 'buraco' visível?",
+    a:[["Sim",3],["Não tenho certeza",2],["Não",0]],
+    flag:"Lesão visível — cárie pode estar atingindo o interior do dente" },
+  { q:"Sente dor ao mastigar de um lado específico da boca?",
+    a:[["Sim",3],["Às vezes",2],["Não",0]],
+    flag:"Dor mastigatória localizada — alerta de comprometimento profundo" },
+  { q:"Há quanto tempo você não vai ao dentista?",
+    a:[["Mais de 2 anos",3],["Entre 1 e 2 anos",2],["Menos de 1 ano",0]],
+    flag:"Sem avaliação profissional recente — risco acumulado" },
+  { q:"Você nota tártaro (placa dura) ou a gengiva 'descendo' nos dentes?",
+    a:[["Sim",3],["Não sei identificar",1],["Não",0]],
+    flag:"Tártaro / retração gengival — sinal de doença periodontal" },
+  { q:"Com que frequência você usa fio dental?",
+    a:[["Raramente ou nunca",2],["Às vezes",1],["Todo dia",0]],
+    flag:"Higiene interdental insuficiente — bactérias entre os dentes" }
+];
+const MAX = QUESTIONS.reduce((s,q)=>s+Math.max(...q.a.map(o=>o[1])),0);
+
+let qi=0, answers=[];
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function startQuiz(){ qi=0; answers=[]; renderQ(); show('s-quiz'); }
+
+function renderQ(){
+  const item=QUESTIONS[qi];
+  document.getElementById('qnum').textContent=qi+1;
+  const pct=Math.round((qi)/QUESTIONS.length*100);
+  document.getElementById('qpct').textContent=pct+"%";
+  document.getElementById('qbar').style.width=pct+"%";
+  document.getElementById('qtext').textContent=item.q;
+  const box=document.getElementById('qopts'); box.innerHTML="";
+  item.a.forEach(([label,weight])=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.innerHTML='<span class="mk"></span>'+label;
+    b.onclick=()=>answer(weight);
+    box.appendChild(b);
+  });
+}
+function answer(weight){
+  answers.push({weight, flag:QUESTIONS[qi].flag});
+  qi++;
+  if(qi<QUESTIONS.length){ renderQ(); }
+  else { runAnalysis(); }
+}
+
+/* ===== ANALYSIS ===== */
+function runAnalysis(){
+  show('s-analyze');
+  const steps=["Cruzando seus sintomas…","Calculando índice de risco…","Identificando alertas críticos…","Gerando seu laudo…"];
+  let p=0, si=0;
+  const apct=document.getElementById('apct'), astep=document.getElementById('astep');
+  const t=setInterval(()=>{
+    p+=Math.floor(Math.random()*7)+3; if(p>100)p=100;
+    apct.textContent=p+"%";
+    const ns=Math.min(steps.length-1, Math.floor(p/26));
+    if(ns!==si){ si=ns; astep.style.opacity=0; setTimeout(()=>{astep.textContent=steps[si];astep.style.opacity=1;},150); }
+    if(p>=100){ clearInterval(t); setTimeout(buildResult,450); }
+  },120);
+}
+
+/* ===== RESULT ===== */
+let finalScore=0;
+function buildResult(){
+  const raw=answers.reduce((s,a)=>s+a.weight,0);
+  finalScore=Math.round(raw/MAX*100);
+  // floor para não zerar o funil de audiência auto-selecionada
+  if(finalScore<34) finalScore=34+Math.floor(Math.random()*6);
+
+  const tagEl=document.getElementById('rtag');
+  let tagTxt,tagBg,tagFg;
+  if(finalScore>=60){ tagTxt="RISCO ALTO"; tagBg="var(--red)"; tagFg="#fff"; }
+  else if(finalScore>=40){ tagTxt="MODERADO"; tagBg="var(--amber)"; tagFg="#0A0A0B"; }
+  else { tagTxt="ATENÇÃO"; tagBg="var(--amber)"; tagFg="#0A0A0B"; }
+  tagEl.textContent=tagTxt; tagEl.style.background=tagBg; tagEl.style.color=tagFg;
+
+  animateScore('rscore', finalScore);
+  document.getElementById('rpin').style.left=Math.min(96,Math.max(4,finalScore))+"%";
+
+  // flags reais a partir das respostas com peso alto
+  const detected=answers.filter(a=>a.weight>=2).map(a=>a.flag);
+  const box=document.getElementById('rflags'); box.innerHTML="";
+  const showFlags=detected.slice(0,3);
+  if(showFlags.length===0) showFlags.push("Fatores de risco identificados no seu padrão de higiene");
+  showFlags.forEach(f=>{
+    const d=document.createElement('div'); d.className='flag';
+    d.innerHTML='<span class="fi">▲</span><p>'+f+'</p>'; box.appendChild(d);
+  });
+
+  document.getElementById('payscore').textContent=finalScore+"/100 ("+tagTxt+")";
+  show('s-result');
+}
+function animateScore(id,target){
+  const el=document.getElementById(id); let n=0;
+  const t=setInterval(()=>{ n+=Math.ceil(target/22); if(n>=target){n=target;clearInterval(t);} el.textContent=n; },35);
+}
+
+/* ===== PAYWALL ===== */
+function goPay(){ startTimer(); show('s-pay'); }
+let timerStarted=false;
+function startTimer(){
+  if(timerStarted) return; timerStarted=true;
+  let total=CONFIG.timerMin*60;
+  const el=document.getElementById('clock');
+  const t=setInterval(()=>{
+    total--; if(total<0){clearInterval(t);return;}
+    const m=String(Math.floor(total/60)).padStart(2,'0');
+    const s=String(total%60).padStart(2,'0');
+    el.textContent=m+":"+s;
+  },1000);
+}
+function checkout(){ window.location.href=CONFIG.checkoutUrl; }
+
+/* init config-driven text */
+document.getElementById('pnew').textContent=CONFIG.precoNovo;
+document.getElementById('pold').textContent=CONFIG.precoDe;
+</script>
+</body>
+</html>

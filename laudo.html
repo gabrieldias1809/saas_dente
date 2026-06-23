@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DenteSafe — Seu Laudo Final</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="hazard"></div>
+  
+  <main class="wrap">
+    <div class="hero fade-in">
+      <div class="success glass-panel">
+        <div class="ic pulse">✓</div>
+        <h1>Pagamento Confirmado</h1>
+        <p>Seu laudo completo está liberado abaixo. Baixe o PDF pra guardar e consultar quando quiser.</p>
+        <button class="dl btn-glow" id="btnDownload">
+          <span class="btn-text">⬇ Baixar meu laudo em PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="divider slide-up">Seu laudo na tela</div>
+
+    <div class="recap glass-panel slide-up delay-1">
+      <div class="glabel">Índice de risco</div>
+      <div class="row">
+        <span class="n" id="score">68</span>
+        <span class="d">/100</span>
+        <span class="tag pulse-red" id="tag">RISCO ALTO</span>
+      </div>
+      <div class="meter">
+        <div class="pin" id="pin"></div>
+      </div>
+      <div class="mscale">
+        <span>Baixo</span>
+        <span>Moderado</span>
+        <span>Alto</span>
+      </div>
+    </div>
+
+    <section class="blk slide-up delay-2">
+      <div class="eyebrow"><span class="num">1</span> O que seu índice significa</div>
+      <h2>Você está na faixa de alerta</h2>
+      <p class="body">Esse índice indica <b class="highlight">vários fatores de risco ativos ao mesmo tempo</b> — a combinação que mais leva à progressão silenciosa da cárie e da doença gengival. Lesões internas avançam <b class="highlight">sem dor</b> até atingirem a polpa; quando dói, normalmente já é canal ou extração.</p>
+      <p class="body">A boa notícia: ajustar a rotina agora e fazer uma avaliação profissional <b class="highlight">muda completamente o desfecho</b>.</p>
+    </section>
+
+    <section class="blk slide-up delay-3">
+      <div class="eyebrow"><span class="num">2</span> Sinais de "procure um dentista agora"</div>
+      <h2>Os 3 alertas que não podem esperar</h2>
+      <div class="cards-container">
+        <div class="redflag hover-lift">
+          <h3>🚨 Dor espontânea ou latejante</h3>
+          <p>Dor sem mastigar sugere polpa inflamada. Agende avaliação em até 48h.</p>
+        </div>
+        <div class="redflag hover-lift">
+          <h3>🚨 Inchaço, "bolinha" na gengiva ou gosto ruim</h3>
+          <p>Pode ser abscesso (infecção). É o que evolui mais rápido — procure atendimento o quanto antes.</p>
+        </div>
+        <div class="redflag hover-lift">
+          <h3>🚨 Dente que mudou de cor ou ficou "mole"</h3>
+          <p>Sinais de comprometimento profundo. Quanto antes avaliado, maior a chance de salvar o dente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="blk slide-up delay-4">
+      <div class="eyebrow"><span class="num">3</span> Seu protocolo de prevenção diário</div>
+      <h2>A rotina que freia o avanço</h2>
+      <div class="proto glass-panel">
+        <div class="t">☀️ Manhã</div>
+        <ul>
+          <li><span class="c">›</span> 2 min com creme dental <b>com flúor (1450 ppm)</b> — remineraliza o esmalte no início da cárie.</li>
+          <li><span class="c">›</span> Cerda a 45° na linha da gengiva, movimentos curtos. Sem força — desgasta.</li>
+          <li><span class="c">›</span> Limpe a língua — reduz bactéria e mau hálito.</li>
+        </ul>
+      </div>
+      <div class="proto glass-panel">
+        <div class="t">🌙 Noite (a mais importante)</div>
+        <ul>
+          <li><span class="c">›</span> <b class="highlight">Fio dental antes de escovar.</b> Cárie entre os dentes é onde quase todo mundo falha.</li>
+          <li><span class="c">›</span> Escove e <b class="highlight">não enxágue com água</b> depois — deixe o flúor agir.</li>
+          <li><span class="c">›</span> Nada de comer ou beber (exceto água) depois disso.</li>
+        </ul>
+      </div>
+      <div class="proto glass-panel">
+        <div class="t">📅 Semanal</div>
+        <ul>
+          <li><span class="c">›</span> Confira no espelho: gengiva avermelhada, sangramento, manchas, "buraquinhos" novos.</li>
+          <li><span class="c">›</span> Anote qualquer sensibilidade nova e leve ao dentista.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="blk slide-up delay-5">
+      <div class="eyebrow"><span class="num">4</span> Como frear o avanço</div>
+      <h2>O que fazer e o que evitar</h2>
+      <div class="dodont">
+        <div class="dd do hover-lift">
+          <h4>✓ Faça</h4>
+          <ul>
+            <li>✓ Reduza a frequência de açúcar</li>
+            <li>✓ Beba mais água após comer</li>
+            <li>✓ Troque a escova a cada 3 meses</li>
+            <li>✓ Marque uma avaliação profissional</li>
+          </ul>
+        </div>
+        <div class="dd dont hover-lift">
+          <h4>✕ Evite</h4>
+          <ul>
+            <li>✕ "Tratar" cárie em casa</li>
+            <li>✕ Mascarar dor e adiar a consulta</li>
+            <li>✕ Beliscar açúcar o dia todo</li>
+            <li>✕ Escovar com força após algo ácido</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="blk slide-up delay-6">
+      <div class="eyebrow"><span class="num">5</span> Checklist de emergência bucal</div>
+      <h2>Tenha sempre à mão</h2>
+      <div class="check glass-panel">
+        <label class="check-item"><input type="checkbox"> <span>Sei diferenciar dor espontânea de dor ao mastigar</span></label>
+        <label class="check-item"><input type="checkbox"> <span>Tenho contato de dentista/plantão salvo</span></label>
+        <label class="check-item"><input type="checkbox"> <span>Uso fio dental todas as noites</span></label>
+        <label class="check-item"><input type="checkbox"> <span>Meu creme dental tem flúor</span></label>
+        <label class="check-item"><input type="checkbox"> <span>Marquei minha próxima avaliação</span></label>
+      </div>
+    </section>
+
+    <div class="next slide-up delay-7">
+      <h4>Seu próximo passo</h4>
+      <p>Use o protocolo a partir de hoje à noite e, se você marcou qualquer alerta da seção 2, agende uma avaliação. O laudo te dá o mapa — o dentista confirma e trata o que já está ativo.</p>
+    </div>
+
+    <p class="disclaimer slide-up delay-9"><b>Aviso importante:</b> este laudo é uma triagem educativa baseada em autorrelato, com finalidade informativa. <b>Não constitui diagnóstico, prescrição ou tratamento odontológico</b> e não substitui a avaliação presencial de um cirurgião-dentista. Em caso de dor, sangramento, inchaço ou lesão, procure um profissional habilitado imediatamente.</p>
+    
+    <footer class="footer slide-up delay-9">
+      DenteSafe · acesso pessoal e intransferível
+    </footer>
+
+  </main>
+
+  <div class="toast" id="toast">Ação realizada com sucesso!</div>
+  <script>
+    setTimeout(() => {
+      document.getElementById('pin').style.left = '68%';
+    }, 500);
+
+    const btnDownload = document.getElementById('btnDownload');
+    if(btnDownload) {
+      btnDownload.addEventListener('click', () => {
+        alert("Em breve: PDF Download");
+      });
+    }
+  </script>
+</body>
+</html>
