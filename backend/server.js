@@ -33,9 +33,13 @@ function writeDB(data) {
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
 
-// Ensure DB exists
-if (!fs.existsSync(DB_FILE)) {
-  writeDB({ orders: [] });
+// Ensure DB exists safely
+try {
+  if (!fs.existsSync(DB_FILE)) {
+    writeDB({ orders: [] });
+  }
+} catch (e) {
+  console.log("Aviso: Não foi possível criar database.json na inicialização. Verifique as permissões ou configurações de volume (Mount) no EasyPanel.");
 }
 
 // ----------------------------------------
@@ -147,7 +151,12 @@ app.post('/api/webhook/syncpay', (req, res) => {
   res.status(200).json({ received: true });
 });
 
+// 4. Rota de Healthcheck (Para o EasyPanel saber que o app iniciou)
+app.get('/', (req, res) => {
+  res.status(200).send('Backend DenteSafe Operacional');
+});
+
 // Start Server
-app.listen(port, () => {
-  console.log(`Backend rodando na porta ${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Backend rodando na porta ${port} e ouvindo em 0.0.0.0`);
 });
