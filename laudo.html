@@ -147,7 +147,10 @@
 
   </main>
 
-  <div class="toast" id="toast">Ação realizada com sucesso!</div>
+  <div class="toast" id="toast">Download iniciado!</div>
+  
+  <!-- Import html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     setTimeout(() => {
       document.getElementById('pin').style.left = '68%';
@@ -156,7 +159,44 @@
     const btnDownload = document.getElementById('btnDownload');
     if(btnDownload) {
       btnDownload.addEventListener('click', () => {
-        alert("Em breve: PDF Download");
+        // Change button text and show toast
+        const originalText = btnDownload.innerHTML;
+        btnDownload.innerHTML = '<span class="btn-text">Gerando PDF... Aguarde</span>';
+        
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+
+        // Select the content to be converted (the entire main wrap)
+        const element = document.querySelector('main.wrap');
+        
+        // Hide the download button itself from the PDF
+        const successBlock = document.querySelector('.success');
+        const originalDisplay = successBlock.style.display;
+        
+        // Options for the PDF generation
+        const opt = {
+          margin:       [10, 0, 10, 0], // top, left, bottom, right
+          filename:     'Meu-Diagnostico-DenteSafe.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: '#050506', // Match our bg-primary to avoid white borders
+            ignoreElements: (el) => el.id === 'btnDownload' // Ignore download button
+          },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        
+        // Generate and save
+        html2pdf().set(opt).from(element).save().then(() => {
+          // Restore button text
+          btnDownload.innerHTML = originalText;
+        }).catch(err => {
+          console.error("Erro ao gerar PDF", err);
+          btnDownload.innerHTML = originalText;
+          alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+        });
       });
     }
   </script>
