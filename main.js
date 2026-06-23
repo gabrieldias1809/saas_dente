@@ -225,6 +225,9 @@ function startTimer() {
   }, 1000);
 }
 
+// Base URL da API (Usa a variável do Vercel em produção, ou localhost em dev)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 async function checkout() { 
   // Disable button to prevent double click
   const btn = document.querySelector('.offer .btn');
@@ -233,7 +236,7 @@ async function checkout() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('http://localhost:3000/api/checkout', {
+    const res = await fetch(`${API_BASE_URL}/api/checkout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}) // Envia body vazio para usar os valores hardcoded do backend
@@ -281,7 +284,7 @@ function startPolling(identifier) {
   
   pollingInterval = setInterval(async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/status/${identifier}`);
+      const res = await fetch(`${API_BASE_URL}/api/status/${identifier}`);
       if (!res.ok) return;
       
       const data = await res.json();
