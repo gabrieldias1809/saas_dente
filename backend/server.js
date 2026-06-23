@@ -72,20 +72,21 @@ app.post('/api/checkout', async (req, res) => {
         }
       };
       
-      // Chamada fictícia/real para SyncPay (ajuste a URL para a real da SyncPay)
-      /*
-      const response = await axios.post('https://api.syncpay.com.br/v1/pix', pixPayload, {
-        headers: {
-          'Client-Id': clientId,
-          'Client-Secret': clientSecret
-        }
-      });
-      pix_code = response.data.pix_code;
-      // identifier could also come from SyncPay depending on their API logic
-      */
-      
-      // MOCK FALLBACK
-      pix_code = "00020101021126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-426655440000520400005303986540515.905802BR5913DenteSafe App6009Sao Paulo62070503***6304E1D2";
+      // Chamada real para SyncPay
+      try {
+        const response = await axios.post('https://api.syncpay.com.br/v1/pix', pixPayload, {
+          headers: {
+            'Client-Id': clientId,
+            'Client-Secret': clientSecret
+          }
+        });
+        pix_code = response.data.pix_code;
+        // Se a SyncPay retornar um ID próprio da transação, você pode sobreescrever o identifier aqui:
+        // if (response.data.identifier) identifier = response.data.identifier;
+      } catch (apiError) {
+        console.error("Erro na comunicação com a SyncPay:", apiError.response ? apiError.response.data : apiError.message);
+        throw new Error("Falha na API da SyncPay");
+      }
     } else {
       // Mocked response for development when env vars are missing
       pix_code = "00020101021126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-426655440000520400005303986540515.905802BR5913DenteSafe App6009Sao Paulo62070503***6304E1D2";
