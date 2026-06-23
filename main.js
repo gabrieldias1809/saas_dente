@@ -229,6 +229,13 @@ function buildResult() {
     box.appendChild(d);
   });
 
+  // Salvar no localStorage para usar na laudo.html
+  localStorage.setItem('denteSafeScore', finalScore);
+  localStorage.setItem('denteSafeTag', tagTxt);
+  localStorage.setItem('denteSafeBg', tagBg);
+  localStorage.setItem('denteSafeFg', tagFg);
+  localStorage.setItem('denteSafeFlags', JSON.stringify(showFlags));
+
   document.getElementById('payscore').textContent = finalScore + "/100 (" + tagTxt + ")";
   show('s-result');
 }
