@@ -72,19 +72,47 @@ app.post('/api/checkout', async (req, res) => {
         }
       };
       
-      // Chamada real para SyncPay
+      // Lógica Oficial da SyncPay
       try {
-        const response = await axios.post('https://api.syncpay.com.br/v1/pix', pixPayload, {
+        const apiUrl = process.env.SYNCPAY_API_URL || 'https://api.syncpayments.com.br';
+        
+        // 1. Gerar o Bearer Token
+        const authResponse = await axios.post(`${apiUrl}/api/partner/v1/auth-token`, {
+          client_id: clientId,
+          client_secret: clientSecret
+        });
+        
+        const accessToken = authResponse.data.access_token;
+
+        // 2. Montar o Payload de Cash-In conforme a documentação
+        const cashInPayload = {
+          amount: 47.90, // Valor do seu laudo (ajuste conforme necessário)
+          description: "Laudo Completo DenteSafe",
+          client: {
+            name: "Cliente DenteSafe",
+            cpf: "12345678909", // CPF Genérico para checkout expresso (se o seu checkout pedir CPF real, substitua aqui)
+            email: "contato@dentesafe.com.br",
+            phone: "11999999999"
+          }
+        };
+
+        // 3. Solicitar o Cash-In (PIX)
+        const pixResponse = await axios.post(`${apiUrl}/api/partner/v1/cash-in`, cashInPayload, {
           headers: {
-            'Client-Id': clientId,
-            'Client-Secret': clientSecret
+            'Authorization': `Bearer ${accessToken}`,
+            'Accept': 'application/json'
           }
         });
-        pix_code = response.data.pix_code;
-        // Se a SyncPay retornar um ID próprio da transação, você pode sobreescrever o identifier aqui:
-        // if (response.data.identifier) identifier = response.data.identifier;
+        
+        pix_code = pixResponse.data.pix_code;
+        
+        // Atualiza o identifier com o UUID retornado pela SyncPay para que o Webhook case perfeitamente
+        if (pixResponse.data.identifier) {
+          identifier = pixResponse.data.identifier;
+        }
+        
       } catch (apiError) {
-        console.error("Erro na comunicação com a SyncPay:", apiError.response ? apiError.response.data : apiError.message);
+        console.error("Erro na comunicação com a SyncPay:", apiError.response ? JSON.stringify(apiError.response.data) : apiError.message);
         throw new Error("Falha na API da SyncPay");
       }
     } else {
