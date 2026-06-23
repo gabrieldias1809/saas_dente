@@ -38,24 +38,72 @@ const MAX = QUESTIONS.reduce((s,q)=>s+Math.max(...q.a.map(o=>o[1])),0);
 
 let qi = 0;
 let answers = [];
+let screenHistory = [];
 
 // Expose functions to window so they can be called by onclick in HTML
 window.startQuiz = startQuiz;
 window.answer = answer;
 window.goPay = goPay;
 window.checkout = checkout;
+window.goBack = goBack;
 
-function show(id) {
+function show(id, isBack = false) {
+  const currentActive = document.querySelector('.screen.active');
+  
+  if (!isBack && currentActive && currentActive.id !== 's-analyze' && currentActive.id !== 's-pix') {
+    screenHistory.push(currentActive.id);
+  }
+
   document.querySelectorAll('.screen').forEach(s => {
     s.classList.remove('active');
   });
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+
+  const btnBack = document.getElementById('globalBack');
+  if (btnBack) {
+    if (id === 's-intro' || id === 's-analyze' || id === 's-pix') {
+      btnBack.style.display = 'none';
+    } else {
+      btnBack.style.display = 'block';
+    }
+  }
+}
+
+function goBack() {
+  const currentActive = document.querySelector('.screen.active');
+  if (!currentActive) return;
+
+  if (currentActive.id === 's-quiz' && qi > 0) {
+    qi--;
+    answers.pop();
+    renderQ();
+    return;
+  }
+  
+  if (currentActive.id === 's-result') {
+    screenHistory.pop(); 
+    qi = QUESTIONS.length - 1;
+    answers.pop();
+    renderQ();
+    show('s-quiz', true);
+    return;
+  }
+
+  if (screenHistory.length > 0) {
+    const prevId = screenHistory.pop();
+    if (prevId === 's-quiz') {
+      qi = QUESTIONS.length - 1;
+      renderQ();
+    }
+    show(prevId, true);
+  }
 }
 
 function startQuiz() { 
   qi = 0; 
   answers = []; 
+  screenHistory = [];
   renderQ(); 
   show('s-quiz'); 
 }
