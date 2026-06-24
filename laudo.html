@@ -91,6 +91,7 @@ p.body b{color:#fff}
 }
 .inp:focus { outline: none; border-color: var(--amber); }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 <div class="hazard"></div>
@@ -105,6 +106,7 @@ p.body b{color:#fff}
 
   <div class="divider">Seu laudo na tela</div>
 
+  <div id="laudoContent">
   <div class="recap">
     <div class="glabel">Índice de risco</div>
     <div class="row"><span class="n" id="score">68</span><span class="d">/100</span><span class="tag" id="tag">RISCO ALTO</span></div>
@@ -194,6 +196,7 @@ p.body b{color:#fff}
 
   <p class="disclaimer"><b>Aviso importante:</b> este laudo é uma triagem educativa baseada em autorrelato, com finalidade informativa. <b>Não constitui diagnóstico, prescrição ou tratamento odontológico</b> e não substitui a avaliação presencial de um cirurgião-dentista. Em caso de dor, sangramento, inchaço ou lesão, procure um profissional habilitado imediatamente.</p>
   <div class="footer">DenteSafe · acesso pessoal e intransferível</div>
+  </div><!-- /laudoContent -->
 
 </div>
 
@@ -263,35 +266,46 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-/* PDF do laudo embutido (base64) — download funciona sem hospedar nada junto */
-const PDF_B64 = "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";
-
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-function b64ToBlob(b64,type){
-  const bytes=atob(b64); const len=bytes.length; const arr=new Uint8Array(len);
-  for(let i=0;i<len;i++) arr[i]=bytes.charCodeAt(i);
-  return new Blob([arr],{type:type});
-}
+document.getElementById('btnDownload').addEventListener('click', function(){
+  const btn = this;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Gerando PDF...';
+  btn.disabled = true;
 
-document.getElementById('btnDownload').addEventListener('click',function(){
-  try{
-    const blob=b64ToBlob(PDF_B64,'application/pdf');
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=CONFIG.pdfFileName;
-    document.body.appendChild(a); a.click();
-    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1500);
+  const element = document.getElementById('laudoContent');
+
+  // Temporarily adjust styles for PDF rendering
+  const wrap = document.querySelector('.wrap');
+  const originalMaxWidth = wrap.style.maxWidth;
+  wrap.style.maxWidth = '560px';
+
+  const opt = {
+    margin:       [8, 5, 8, 5],
+    filename:     CONFIG.pdfFileName,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0A0A0B', scrollY: 0, windowWidth: 600 },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    wrap.style.maxWidth = originalMaxWidth;
+    btn.innerHTML = originalText;
+    btn.disabled = false;
     toast('Download iniciado. Confira seus arquivos.');
-  }catch(e){
-    // fallback: abre o PDF numa nova aba
-    try{ window.open('data:application/pdf;base64,'+PDF_B64,'_blank'); }
-    catch(_){ toast('Não foi possível baixar aqui. Tente abrir a página fora do app.'); }
-  }
+  }).catch((e) => {
+    console.error('Erro ao gerar PDF:', e);
+    wrap.style.maxWidth = originalMaxWidth;
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    toast('Não foi possível gerar o PDF. Tente novamente.');
+  });
 });
 
 document.getElementById('btnUpsell').addEventListener('click',function(){
