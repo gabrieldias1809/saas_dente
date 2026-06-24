@@ -404,5 +404,21 @@ if(!isNaN(s)){
   else{tag.textContent='ATENÇÃO';tag.style.background='var(--amber)';tag.style.color='#0A0A0B';}
 }
 </script>
+  <!-- LGPD / Cookies Banner -->
+  <div id="cookieBanner" style="display:none; position:fixed; bottom:0; left:0; width:100%; background:#141416; border-top:1px solid #2A2A2E; padding:15px 20px; z-index:9999; flex-wrap:wrap; justify-content:center; align-items:center; gap:15px; font-size:12px; color:#8A8A90; text-align:center;">
+    <div style="flex:1; min-width:250px;">
+      Nós utilizamos cookies e tecnologias semelhantes para melhorar a sua experiência em nossos serviços, personalizar publicidade e recomendar conteúdo de seu interesse. Ao utilizar nossos serviços, você concorda com tal monitoramento e com nossa <a href="/termos.html" target="_blank" style="color:#FFB400; text-decoration:underline;">Política de Privacidade e Termos de Uso</a>.
+    </div>
+    <button onclick="acceptCookies()" style="background:#FFB400; color:#0A0A0B; border:none; padding:8px 20px; border-radius:8px; font-weight:bold; cursor:pointer;">Entendi e Aceito</button>
+  </div>
+  <script>
+    if(!localStorage.getItem('lgpd_accepted')) {
+      document.getElementById('cookieBanner').style.display = 'flex';
+    }
+    window.acceptCookies = function() {
+      localStorage.setItem('lgpd_accepted', 'true');
+      document.getElementById('cookieBanner').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
