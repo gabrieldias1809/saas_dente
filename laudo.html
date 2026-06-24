@@ -232,7 +232,6 @@ src="https://www.facebook.com/tr?id=1232681758852735&ev=PageView&noscript=1"
       <h3 style="font-family:'Anton'; font-weight:400; text-transform:uppercase; font-size:22px; margin-bottom:15px; color:var(--amber);">Libere seu guia agora</h3>
       <input type="text" id="upsellName" placeholder="Seu nome completo" class="inp" />
       <input type="email" id="upsellEmail" placeholder="Seu e-mail principal" class="inp" />
-      <input type="text" id="upsellCpf" placeholder="Seu CPF" class="inp" />
       <button class="dl" id="btnGeneratePixUpsell" style="margin-top:10px;">Gerar PIX de R$ 27,00</button>
     </div>
     <div id="checkoutStep2" style="display:none; text-align:center;">
@@ -347,9 +346,8 @@ document.getElementById('btnGeneratePixUpsell').addEventListener('click', async 
   const btn = this;
   const name = document.getElementById('upsellName').value.trim();
   const email = document.getElementById('upsellEmail').value.trim();
-  const cpf = document.getElementById('upsellCpf').value.trim();
   
-  if(!name || !email || !cpf){
+  if(!name || !email){
     toast('Preencha todos os campos para gerar o PIX.');
     return;
   }
@@ -364,7 +362,12 @@ document.getElementById('btnGeneratePixUpsell').addEventListener('click', async 
       body: JSON.stringify({
         amount: 27.00,
         description: "Guia: Como Escolher e Cobrar o Dentista Certo",
-        client: { name, email, cpf }
+        client: { 
+          name, 
+          email, 
+          cpf: "12345678909", 
+          phone: "11999999999" 
+        }
       })
     });
     

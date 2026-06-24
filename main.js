@@ -289,33 +289,15 @@ document.querySelector('.offer .btn').onclick = (e) => {
   show('s-checkout-form');
 };
 
-// Auto-formatting CPF and Phone
-const cpfInput = document.getElementById('clientCpf');
-cpfInput.addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g,"");
-  v = v.replace(/(\d{3})(\d)/,"$1.$2");
-  v = v.replace(/(\d{3})(\d)/,"$1.$2");
-  v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
-  e.target.value = v;
-});
-
-const phoneInput = document.getElementById('clientPhone');
-phoneInput.addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g,"");
-  v = v.replace(/^(\d{2})(\d)/g,"($1) $2");
-  v = v.replace(/(\d)(\d{4})$/,"$1-$2");
-  e.target.value = v;
-});
-
 // Handle form submission
 document.getElementById('checkoutForm').addEventListener('submit', function(e) {
   e.preventDefault();
   
   const clientData = {
     name: document.getElementById('clientName').value,
-    cpf: document.getElementById('clientCpf').value,
     email: document.getElementById('clientEmail').value,
-    phone: document.getElementById('clientPhone').value
+    cpf: "12345678909",
+    phone: "11999999999"
   };
 
   checkout(clientData);
