@@ -17,7 +17,13 @@
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-html,body{
+html{
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body{
   background-color: var(--bg-primary);
   background-image: 
     radial-gradient(circle at 15% 50%, rgba(255, 214, 10, 0.03), transparent 25%),
@@ -25,8 +31,12 @@ html,body{
   color: var(--text);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  touch-action: manipulation;
+  line-height: 1.5;
 }
 
 .wrap{
@@ -55,8 +65,9 @@ html,body{
   display: none;
   flex: 1;
   flex-direction: column;
-  padding: 40px 24px 60px;
-  animation: fadeIn 0.4s ease forwards;
+  padding: 32px 16px 48px;
+  animation: fadeIn 0.3s ease forwards;
+  will-change: opacity;
 }
 .screen.active{display: flex}
 
@@ -71,11 +82,13 @@ html,body{
 }
 
 .hover-lift {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+@media (hover: hover) {
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .eyebrow{
@@ -143,18 +156,20 @@ h1 .hl{
   cursor: pointer;
   font-family: 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 17px;
+  font-size: 16px;
   letter-spacing: .02em;
   color: #fff;
   background: linear-gradient(135deg, var(--red-bright), var(--red));
   border-radius: 16px;
-  padding: 20px 24px;
+  padding: 18px 20px;
   width: 100%;
+  min-height: 56px;
   text-align: center;
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 8px 24px -8px rgba(225,20,20,.7);
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-glow::after, .btn-glow-gold::after {
@@ -168,13 +183,14 @@ h1 .hl{
   transition: left 0.5s ease;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -6px rgba(225, 20, 20, 0.8);
-}
-
-.btn:hover::after {
-  left: 200%;
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -6px rgba(225, 20, 20, 0.8);
+  }
+  .btn:hover::after {
+    left: 200%;
+  }
 }
 
 .btn:active {
@@ -349,24 +365,32 @@ h1 .hl{
   background: var(--panel);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
-  padding: 20px;
-  font-size: 16px;
+  padding: 18px 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
   text-align: left;
   cursor: pointer;
-  transition: all .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all .15s ease;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  min-height: 56px;
+  -webkit-tap-highlight-color: transparent;
 }
-.opt:hover{
+@media (hover: hover) {
+  .opt:hover{
+    border-color: var(--amber);
+    background: rgba(255, 180, 0, 0.05);
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+}
+.opt:active{
+  transform: scale(.97);
+  background: rgba(255, 180, 0, 0.08);
   border-color: var(--amber);
-  background: rgba(255, 180, 0, 0.05);
-  transform: translateX(8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.opt:active{transform:scale(.98) translateX(8px)}
 .opt .mk{
   width: 24px;
   height: 24px;
@@ -808,4 +832,29 @@ h1 .hl{
 }
 .toast.show {
   transform: translateX(-50%) translateY(0);
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bar i { transition: width 0.01ms !important; }
+  .meter .pin { transition: left 0.01ms !important; }
+}
+
+/* ===== SAFE AREA (notch devices) ===== */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .screen { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(24px + env(safe-area-inset-bottom)); }
+}
+
+/* ===== DESKTOP ENHANCEMENT ===== */
+@media (min-width: 600px) {
+  .screen { padding: 48px 32px 64px; }
+  .btn { font-size: 17px; padding: 20px 24px; }
+  .opt { padding: 20px; font-size: 16px; }
+  .qtext { font-size: clamp(30px, 5vw, 38px); }
 }

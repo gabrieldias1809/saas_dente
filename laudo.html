@@ -2,14 +2,33 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Seu laudo completo de risco bucal personalizado. Protocolo de prevenção diário e recomendações.">
+<meta name="theme-color" content="#0A0A0B">
 <title>DenteSafe — Seu Laudo Final</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1232681758852735');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
 <style>
 :root{--bg:#0A0A0B;--panel:#141416;--panel2:#1C1C1F;--line:#2A2A2E;--red:#E11414;--red-bright:#FF2A2A;--amber:#FFB400;--yellow:#FFD60A;--green:#22C55E;--text:#F5F5F4;--muted:#8A8A90}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.5;touch-action:manipulation;min-height:100vh;min-height:100dvh}
 .hazard{height:8px;background:repeating-linear-gradient(45deg,var(--yellow) 0 14px,#0A0A0B 14px 28px)}
 .wrap{max-width:560px;margin:0 auto;padding:0 20px 56px}
 .success{background:linear-gradient(160deg,rgba(34,197,94,.14),rgba(20,20,22,.4));border:1px solid rgba(34,197,94,.4);border-radius:16px;padding:22px;margin-top:26px;text-align:center}
@@ -95,6 +114,9 @@ p.body b{color:#fff}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1232681758852735&ev=PageView&noscript=1"
+/></noscript>
 <div class="hazard"></div>
 <div class="wrap">
 
